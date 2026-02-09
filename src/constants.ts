@@ -21,5 +21,6 @@ export const SHOP_PRICES: Record<string, number> = {
   'yellow-1': 8,
   'yellow-2': 12,
   'yellow-4': 18,
-  'purple-1': 9
+  'purple-1': 9,
+  'black-1': 10,
 }

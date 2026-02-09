@@ -1,16 +1,13 @@
+import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { TRACK_DATA, SHOP_PRICES } from '../constants'
 
+// --- Shared Types ---
 export type ChipColor = 'white' | 'orange' | 'green' | 'red' | 'blue' | 'yellow' | 'purple' | 'black'
-export interface ChipBase {
-  color: ChipColor
-  value: number
-}
-export interface Chip extends ChipBase {
-  id: string
-}
+export interface ChipBase { color: ChipColor; value: number }
+export interface Chip extends ChipBase { id: string }
 
-const INITIAL_CHIPS: Omit<Chip, 'id'>[] = [
+const INITIAL_CHIPS: ChipBase[] = [
   { color: 'white', value: 3 },
   { color: 'white', value: 2 }, { color: 'white', value: 2 },
   { color: 'white', value: 1 }, { color: 'white', value: 1 },
@@ -19,7 +16,8 @@ const INITIAL_CHIPS: Omit<Chip, 'id'>[] = [
   { color: 'green', value: 1 }
 ]
 
-export function useGame() {
+export const useGameStore = defineStore('game', () => {
+  // --- State ---
   const round = ref(1)
   const masterInventory = ref<ChipBase[]>([...INITIAL_CHIPS])
   const bag = ref<Chip[]>([])
@@ -27,9 +25,15 @@ export function useGame() {
   const totalVictoryPoints = ref(0)
   const rubies = ref(0)
   const currentBuyingPower = ref(0)
+  const hasCollected = ref(false)
 
-  const whiteSum = computed(() => pot.value.filter(c => c.color === 'white').reduce((s, c) => s + c.value, 0))
-  const currentFieldIndex = computed(() => pot.value.reduce((sum, c) => sum + c.value, 0))
+  // --- Getters (Computed) ---
+  const whiteSum = computed(() =>
+    pot.value.filter(c => c.color === 'white').reduce((s, c) => s + c.value, 0)
+  )
+  const currentFieldIndex = computed(() =>
+    pot.value.reduce((sum, c) => sum + c.value, 0)
+  )
   const isExploded = computed(() => whiteSum.value > 7)
 
   const currentRewards = computed(() => {
@@ -39,64 +43,59 @@ export function useGame() {
     return { buyingPower, vp, hasRuby }
   })
 
-  // intialize bag after round change and at game start
-  const initBag = () => {
+  // --- Actions (Methods) ---
+  function initBag() {
     bag.value = masterInventory.value.map(chip => ({
       ...chip,
       id: Math.random().toString(36).substring(2, 9)
-    })) as Chip[]
+    }))
   }
 
-  const drawChip = () => {
-    if (bag.value.length === 0 || isExploded.value) return
+  function drawChip() {
+    if (bag.value.length === 0 || isExploded.value || hasCollected.value) return
     const randomIndex = Math.floor(Math.random() * bag.value.length)
-    const drawnChips = bag.value.splice(randomIndex, 1)
-    const chip = drawnChips[0]!
+    const drawnItems = bag.value.splice(randomIndex, 1)
+    const chip = drawnItems[0]!
     pot.value.push(chip)
   }
 
-  const collectRewards = () => {
+  function collectRewards() {
+    if (hasCollected.value) return
     const rewards = currentRewards.value
 
     if (isExploded.value) {
-      // In testing/simple mode: Give VP, but lose Buying Power and Ruby
+      // Manual Rule: VP or Buying Power. Defaulting to VP for now.
       totalVictoryPoints.value += rewards.vp
       currentBuyingPower.value = 0
     } else {
-      // Success: Add everything
       totalVictoryPoints.value += rewards.vp
       currentBuyingPower.value = rewards.buyingPower
       if (rewards.hasRuby) rubies.value++
     }
+    hasCollected.value = true
   }
 
-  const startNextRound = () => {
-    round.value++
-    pot.value = []
-    currentBuyingPower.value = 0 // Reset budget for new round
-    initBag()
-  }
-
-  const buyChip = (color: ChipColor, value: number) => {
-    const priceKey = `${color}-${value}`
-    const cost = SHOP_PRICES[priceKey] || 99
-
+  function buyChip(color: ChipColor, value: number) {
+    const cost = SHOP_PRICES[`${color}-${value}`] || 99
     if (currentBuyingPower.value >= cost) {
       currentBuyingPower.value -= cost
-      const newChip: ChipBase = { color, value }
-      masterInventory.value.push(newChip)
-
-      bag.value.push({
-        ...newChip,
-        id: Math.random().toString(36).substring(2, 9)
-      })
+      masterInventory.value.push({ color, value })
       return true
     }
     return false
   }
 
-  return {
-    round, bag, pot, totalVictoryPoints, rubies, whiteSum,
-    currentFieldIndex, isExploded, currentRewards, drawChip, startNextRound, initBag, collectRewards, currentBuyingPower, buyChip, masterInventory
+  function startNextRound() {
+    round.value++
+    pot.value = []
+    currentBuyingPower.value = 0
+    hasCollected.value = false
+    initBag()
   }
-}
+
+  return {
+    round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
+    whiteSum, currentFieldIndex, isExploded, currentRewards, masterInventory,
+    initBag, drawChip, collectRewards, buyChip, startNextRound
+  }
+})
