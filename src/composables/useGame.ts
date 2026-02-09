@@ -1,8 +1,14 @@
 import { ref, computed } from 'vue'
-import { TRACK_DATA } from '../constants'
+import { TRACK_DATA, SHOP_PRICES } from '../constants'
 
 export type ChipColor = 'white' | 'orange' | 'green' | 'red' | 'blue' | 'yellow' | 'purple'
-export interface Chip { id: string; color: ChipColor; value: number }
+export interface ChipBase {
+  color: ChipColor
+  value: number
+}
+export interface Chip extends ChipBase {
+  id: string
+}
 
 const INITIAL_CHIPS: Omit<Chip, 'id'>[] = [
   { color: 'white', value: 3 },
@@ -15,6 +21,7 @@ const INITIAL_CHIPS: Omit<Chip, 'id'>[] = [
 
 export function useGame() {
   const round = ref(1)
+  const masterInventory = ref<ChipBase[]>([...INITIAL_CHIPS])
   const bag = ref<Chip[]>([])
   const pot = ref<Chip[]>([])
   const totalVictoryPoints = ref(0)
@@ -32,10 +39,12 @@ export function useGame() {
     return { buyingPower, vp, hasRuby }
   })
 
+  // intialize bag after round change and at game start
   const initBag = () => {
-    bag.value = INITIAL_CHIPS.map(chip => ({
-      ...chip, id: Math.random().toString(36).substring(2, 9)
-    }))
+    bag.value = masterInventory.value.map(chip => ({
+      ...chip,
+      id: Math.random().toString(36).substring(2, 9)
+    })) as Chip[]
   }
 
   const drawChip = () => {
@@ -68,8 +77,26 @@ export function useGame() {
     initBag()
   }
 
+  const buyChip = (color: ChipColor, value: number) => {
+    const priceKey = `${color}-${value}`
+    const cost = SHOP_PRICES[priceKey] || 99
+
+    if (currentBuyingPower.value >= cost) {
+      currentBuyingPower.value -= cost
+      const newChip: ChipBase = { color, value }
+      masterInventory.value.push(newChip)
+
+      bag.value.push({
+        ...newChip,
+        id: Math.random().toString(36).substring(2, 9)
+      })
+      return true
+    }
+    return false
+  }
+
   return {
     round, bag, pot, totalVictoryPoints, rubies, whiteSum,
-    currentFieldIndex, isExploded, currentRewards, drawChip, startNextRound, initBag, collectRewards, currentBuyingPower
+    currentFieldIndex, isExploded, currentRewards, drawChip, startNextRound, initBag, collectRewards, currentBuyingPower, buyChip, masterInventory
   }
 }

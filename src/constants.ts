@@ -6,3 +6,20 @@ export const TRACK_DATA: [number, number, boolean][] = [
   [24, 8, false], [25, 8, true], [26, 9, false], [27, 9, true], [28, 10, false], [29, 10, true],
   [30, 11, false], [31, 11, true], [32, 12, false], [33, 12, true]
 ];
+
+export const SHOP_PRICES: Record<string, number> = {
+  'orange-1': 3,
+  'green-1': 4,
+  'green-2': 8,
+  'green-4': 14,
+  'blue-1': 5,
+  'blue-2': 10,
+  'blue-4': 19,
+  'red-1': 6,
+  'red-2': 10,
+  'red-4': 16,
+  'yellow-1': 8,
+  'yellow-2': 12,
+  'yellow-4': 18,
+  'purple-1': 9
+}
