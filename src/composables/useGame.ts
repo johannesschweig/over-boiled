@@ -27,7 +27,8 @@ export function useGame() {
 
   const currentRewards = computed(() => {
     const index = Math.min(currentFieldIndex.value, 33)
-    const [buyingPower, vp, hasRuby] = TRACK_DATA[index]
+    const trackField = TRACK_DATA[index] || [0, 0, false]
+    const [buyingPower, vp, hasRuby] = trackField
     return { buyingPower, vp, hasRuby }
   })
 
@@ -40,7 +41,9 @@ export function useGame() {
   const drawChip = () => {
     if (bag.value.length === 0 || isExploded.value) return
     const randomIndex = Math.floor(Math.random() * bag.value.length)
-    pot.value.push(bag.value.splice(randomIndex, 1)[0])
+    const drawnChips = bag.value.splice(randomIndex, 1)
+    const chip = drawnChips[0]!
+    pot.value.push(chip)
   }
 
   const collectRewards = () => {

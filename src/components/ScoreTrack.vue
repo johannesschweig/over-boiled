@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, watch, ref } from 'vue'
+import { nextTick, watch, ref } from 'vue'
 
 interface Props {
   currentField: number
