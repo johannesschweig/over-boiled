@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { nextTick, watch, ref } from 'vue'
+import { TRACK_DATA } from '@/constants'
 
 interface Props {
   currentField: number
-  trackData: [number, number, boolean][]
 }
 
 const props = defineProps<Props>()
@@ -28,7 +28,7 @@ watch(() => props.currentField, async () => {
     </div>
 
     <div ref="scrollContainer" class="flex gap-2 overflow-x-auto px-1 py-2 no-scrollbar snap-x">
-      <div v-for="(data, index) in trackData" :key="index" :data-field="index" :class="[
+      <div v-for="(data, index) in TRACK_DATA" :key="index" :data-field="index" :class="[
         'relative flex-shrink-0 w-12 h-18 rounded-2xl border-2 transition-all duration-500 snap-center flex flex-col items-center justify-between py-3',
         index === currentField
           ? 'bg-amber-500 border-white scale-110 z-10 shadow-[0_0_20px_rgba(251,191,36,0.4)]'

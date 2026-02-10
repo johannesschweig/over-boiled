@@ -1,20 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { TRACK_DATA, SHOP_PRICES } from '../constants'
+import { TRACK_DATA, INITIAL_CHIPS, AVAILABLE_CHIPS } from '@/constants'
+import type { Chip, ChipBase, ChipColor } from '@/constants'
 
-// --- Shared Types ---
-export type ChipColor = 'white' | 'orange' | 'green' | 'red' | 'blue' | 'yellow' | 'purple' | 'black'
-export interface ChipBase { color: ChipColor; value: number }
-export interface Chip extends ChipBase { id: string }
-
-const INITIAL_CHIPS: ChipBase[] = [
-  { color: 'white', value: 3 },
-  { color: 'white', value: 2 }, { color: 'white', value: 2 },
-  { color: 'white', value: 1 }, { color: 'white', value: 1 },
-  { color: 'white', value: 1 }, { color: 'white', value: 1 },
-  { color: 'orange', value: 1 },
-  { color: 'green', value: 1 }
-]
 
 export const useGameStore = defineStore('game', () => {
   // --- State ---
@@ -76,7 +64,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   function buyChip(color: ChipColor, value: number) {
-    const cost = SHOP_PRICES[`${color}-${value}`] || 99
+    const cost = AVAILABLE_CHIPS.filter(c => c.color === color && c.value === value)[0]?.price || 99
     if (currentBuyingPower.value >= cost) {
       currentBuyingPower.value -= cost
       masterInventory.value.push({ color, value })

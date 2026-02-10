@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { ChipBase } from '../composables/useGame'
+import type { ChipBase } from '@/constants'
 
 const props = defineProps<{
   masterChips: ChipBase[] // Only the total collection

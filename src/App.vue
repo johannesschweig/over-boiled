@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { TRACK_DATA, SHOP_PRICES } from './constants'
 import { useGameStore } from '@/store/gameStore'
 
 // Components
@@ -41,9 +40,9 @@ onMounted(() => {
 
       <TheCauldron v-if="!store.hasCollected" :chips="store.pot" />
 
-      <ShopDisplay v-else :buying-power="store.currentBuyingPower" :prices="SHOP_PRICES" />
+      <ShopDisplay v-else :buying-power="store.currentBuyingPower" />
 
-      <ScoreTrack :current-field="store.currentFieldIndex" :track-data="TRACK_DATA" />
+      <ScoreTrack :current-field="store.currentFieldIndex" />
 
       <StatStash v-if="store.hasCollected" :vp="store.totalVictoryPoints" :rubies="store.rubies"
         :buying-power="store.currentBuyingPower" />

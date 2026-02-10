@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Chip } from '../composables/useGame'
+import type { Chip } from '@/constants'
 defineProps<{ chips: Chip[] }>()
 </script>
 
