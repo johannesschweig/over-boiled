@@ -42,7 +42,7 @@ onMounted(() => {
 
       <ShopDisplay v-else :buying-power="store.currentBuyingPower" />
 
-      <ScoreTrack :current-field="store.currentFieldIndex" />
+      <ScoreTrack v-if="!store.hasCollected" :current-field="store.currentFieldIndex" />
 
       <StatStash v-if="store.hasCollected" :vp="store.totalVictoryPoints" :rubies="store.rubies"
         :buying-power="store.currentBuyingPower" />

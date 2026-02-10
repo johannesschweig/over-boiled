@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { useGameStore } from '@/store/gameStore'
 import { AVAILABLE_CHIPS } from '@/constants'
+import { chipColorStyle } from '@/utils';
 
 const props = defineProps<{
   buyingPower: number
@@ -29,31 +30,25 @@ const chipsFilteredAndSorted = computed(() => {
             ? 'bg-slate-700 border-slate-600 hover:border-amber-500'
             : 'bg-slate-800 border-slate-700'
         ]">
-        <div class="flex items-center gap-3">
+        <div class="grid grid-cols-[40px_1fr_40px] items-center gap-3">
           <div :class="[
             'w-10 h-10 rounded-full flex items-center justify-center text-lg font-black shadow-lg',
-            item.color === 'orange' ? 'bg-orange-500 text-white' : '',
-            item.color === 'blue' ? 'bg-blue-500 text-white' : '',
-            item.color === 'red' ? 'bg-red-600 text-white' : '',
-            item.color === 'green' ? 'bg-emerald-600 text-white' : '',
-            item.color === 'black' ? 'bg-zinc-900 text-white' : '',
-            item.color === 'purple' ? 'bg-purple-600 text-white' : '',
+            chipColorStyle(item.color)
           ]">
             {{ item.value }}
           </div>
           <div class="text-left">
-            <p class="text-xs font-bold uppercase text-slate-400">{{ item.label }}</p>
-            <p class="text-sm font-black text-white capitalize">{{ item.color }} {{ item.value }}</p>
+            <p class="text-sm font-black text-white capitalize">{{ item.color }}</p>
+            <p class="text-xs text-slate-400">{{ item.description }}</p>
           </div>
-        </div>
-
-        <div class="text-right font-black text-amber-500 bg-slate-900 px-3 py-1 rounded-lg">
-          {{ item.price }}
+          <div class="text-right font-black text-amber-500 bg-slate-900 px-3 py-1 rounded-lg">
+            {{ item.price }}
+          </div>
         </div>
       </button>
     </div>
 
-    <div v-else class="text-sm font-bold text-slate-500 text-center py-10">
+    <div v-else class="text-sm italic text-slate-500 text-center py-10">
       No chips available for purchase.
     </div>
   </div>

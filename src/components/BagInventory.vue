@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { ChipBase } from '@/constants'
+import type { ChipBase, ChipColor } from '@/constants'
+import { chipColorStyle } from '@/utils';
 
 const props = defineProps<{
   masterChips: ChipBase[] // Only the total collection
@@ -10,7 +11,7 @@ const isOpen = ref(false)
 
 // Group chips from masterChips only
 const groupedChips = computed(() => {
-  const groups: Record<string, { color: string; value: number; count: number }> = {}
+  const groups: Record<string, { color: ChipColor; value: number; count: number }> = {}
   
   props.masterChips.forEach(chip => {
     const key = `${chip.color}-${chip.value}`
@@ -50,13 +51,7 @@ const groupedChips = computed(() => {
           <div class="flex items-center gap-3">
             <div :class="[
               'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-inner',
-              group.color === 'white' ? 'bg-white text-slate-900' : '',
-              group.color === 'orange' ? 'bg-orange-500 text-white' : '',
-              group.color === 'green' ? 'bg-emerald-500 text-white' : '',
-              group.color === 'blue' ? 'bg-blue-500 text-white' : '',
-              group.color === 'red' ? 'bg-red-600 text-white' : '',
-              group.color === 'yellow' ? 'bg-yellow-400 text-slate-900' : '',
-              group.color === 'purple' ? 'bg-purple-600 text-white' : '',
+              chipColorStyle(group.color)
             ]">
               {{ group.value }}
             </div>
