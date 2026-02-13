@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import { TRACK_DATA, INITIAL_CHIPS, AVAILABLE_CHIPS } from '@/constants'
 import type { Chip, ChipBase, ChipColor } from '@/constants'
 
-
 export const useGameStore = defineStore('game', () => {
   // --- State ---
   const round = ref(1)
@@ -15,6 +14,7 @@ export const useGameStore = defineStore('game', () => {
   const currentBuyingPower = ref(0)
   const hasCollected = ref(false)
   const currentFieldIndex = ref(0)
+  const startPosition = ref(0)
 
   // --- Getters (Computed) ---
   const whiteSum = computed(() =>
@@ -22,12 +22,7 @@ export const useGameStore = defineStore('game', () => {
   )
   const isExploded = computed(() => whiteSum.value > 7)
 
-  const currentRewards = computed(() => {
-    const index = Math.min(currentFieldIndex.value, 33)
-    const trackField = TRACK_DATA[index] || [0, 0, false]
-    const [buyingPower, vp, hasRuby] = trackField
-    return { buyingPower, vp, hasRuby }
-  })
+
 
   // --- Actions (Methods) ---
   function initBag() {
@@ -41,46 +36,98 @@ export const useGameStore = defineStore('game', () => {
 
   function drawChip() {
     if (bag.value.length === 0 || isExploded.value || hasCollected.value) return
+
     const randomIndex = Math.floor(Math.random() * bag.value.length);
     const [newChip] = bag.value.splice(randomIndex, 1);
 
-    if (newChip) {
-      // 1. Calculate the starting point (last chip's position or 0)
-      const lastPosition = pot.value.length > 0
-        ? pot.value[pot.value.length - 1]?.placedAt ?? 0
-        : 0;
+    if (!newChip) return;
 
-      // 2. Calculate movement (with Red chip bonuses)
-      const movement = getChipMovement(newChip);
-      const isTriggered = newChip.color === 'red' && movement > newChip.value;
+    // 1. Determine Position
+    const lastPosition = pot.value.length > 0
+      ? pot.value[pot.value.length - 1]?.placedAt ?? 0
+      : startPosition.value;
 
-      // 3. Place the chip
-      const chipToPlace: Chip = {
-        ...newChip,
-        placedAt: lastPosition + movement,
-        isTriggered
-      };
+    const movement = getChipMovement(newChip);
 
-      pot.value.push(chipToPlace);
+    // 2. Create the Chip Object
+    const chipToPlace: Chip = {
+      ...newChip,
+      placedAt: lastPosition + movement,
+      isTriggered: false // Default to false
+    };
 
-      // 4. Update track index (for scoring)
-      currentFieldIndex.value = chipToPlace.placedAt;
+    // 3. Initial Trigger Logic (Instant triggers)
+    if (newChip.color === 'red' && movement > newChip.value) chipToPlace.isTriggered = true;
+    if (['purple', 'black', 'blue'].includes(newChip.color)) chipToPlace.isTriggered = true;
+
+    // 4. Yellow Logic (The "Mandrake" - removing the previous white chip)
+    if (newChip.color === 'yellow') {
+      // Look at the pot BEFORE we push the yellow chip
+      const lastWhiteIndex = [...pot.value].reverse().findIndex(c => c.color === 'white');
+
+      if (lastWhiteIndex !== -1) {
+        const actualIndex = pot.value.length - 1 - lastWhiteIndex;
+        const [removedWhite] = pot.value.splice(actualIndex, 1);
+
+        if (removedWhite) {
+          // Put white back in bag (clean the state)
+          bag.value.push({ ...removedWhite, placedAt: -1, isTriggered: false });
+          chipToPlace.isTriggered = true; // Now the yellow chip will glow
+        }
+      }
     }
+
+    // 5. Push to Pot & Update Field
+    pot.value.push(chipToPlace);
+    currentFieldIndex.value = chipToPlace.placedAt;
+
+    // 6. Global State Update (Green Chips / End of Round triggers)
+    // We re-evaluate green chips every time the "last/second-to-last" positions change
+    updateGreenChipTriggers();
+  }
+
+  /** * Helper to update Green chips based on their distance from the end
+   */
+  function updateGreenChipTriggers() {
+    const potLength = pot.value.length;
+    pot.value.forEach((chip, index) => {
+      if (chip.color === 'green') {
+        // Green triggers if it's the last (index length-1) or second to last (length-2)
+        chip.isTriggered = (index >= potLength - 2);
+      }
+    });
   }
 
   function collectRewards() {
+    const index = Math.min(currentFieldIndex.value, 33)
+    const trackField = TRACK_DATA[index] || [0, 0, false]
+    const [buyingPower, vp, hasRuby] = trackField
+    const purpleChips = pot.value.filter(c => c.color === 'purple').length
+    if (purpleChips === 2) {
+      startPosition.value += 1
+    }
+
+    // rubies
+    const greenRubies = (pot.value[pot.value.length - 1]?.color === 'green' ? 1 : 0) + (pot.value[pot.value.length - 2]?.color === 'green' ? 1 : 0)
+    const purpleRubies = purpleChips === 2 ? 1 : 0
+    const blackRubies = pot.value.filter(c => c.color === 'black').length
+    const rub = hasRuby ? 1 : 0 + greenRubies + purpleRubies + blackRubies
+
+    // victory points
+    const purpleVP = purpleChips === 0 ? 0 : purpleChips <= 2 ? 1 : 2
+    const victoryPoints = vp + purpleVP
+
     if (hasCollected.value) return
-    const rewards = currentRewards.value
 
     if (isExploded.value) {
       // Manual Rule: VP or Buying Power. Defaulting to VP for now.
-      totalVictoryPoints.value += rewards.vp
       currentBuyingPower.value = 0
+
     } else {
-      totalVictoryPoints.value += rewards.vp
-      currentBuyingPower.value = rewards.buyingPower
-      if (rewards.hasRuby) rubies.value++
+      currentBuyingPower.value = buyingPower
     }
+    totalVictoryPoints.value += victoryPoints
+    rubies.value += rub
     hasCollected.value = true
   }
 
@@ -97,7 +144,7 @@ export const useGameStore = defineStore('game', () => {
   function startNextRound() {
     round.value++
     pot.value = []
-    currentFieldIndex.value = 0
+    currentFieldIndex.value = startPosition.value
     currentBuyingPower.value = 0
     hasCollected.value = false
     initBag()
@@ -121,7 +168,7 @@ export const useGameStore = defineStore('game', () => {
 
   return {
     round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
-    whiteSum, currentFieldIndex, isExploded, currentRewards, masterInventory,
+    whiteSum, currentFieldIndex, isExploded, masterInventory,
     initBag, drawChip, collectRewards, buyChip, startNextRound
   }
 })

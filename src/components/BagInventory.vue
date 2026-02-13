@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { ChipColor } from '@/constants'
-import { chipColorStyle } from '@/utils';
 import { useGameStore } from '@/store/gameStore'
 import Chip from '@/components/Chip.vue';
 
