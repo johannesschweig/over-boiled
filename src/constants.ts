@@ -42,15 +42,15 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
   },
   {
     color: 'red', value: 1, price: 6, label: 'Toadstool',
-    description: 'Moves +1 extra space if you already have Orange chips in your pot.'
+    description: 'Moves +1/+2 extra space if you already have Orange chips (1-2/3+) in your pot.'
   },
   {
     color: 'red', value: 2, price: 10, label: 'Toadstool',
-    description: 'Moves +1 extra space if you already have Orange chips in your pot.'
+    description: 'Moves +1/+2 extra space if you already have Orange chips (1-2/3+) in your pot.'
   },
   {
     color: 'red', value: 4, price: 16, label: 'Toadstool',
-    description: 'Moves +2 extra spaces if you already have 2+ Orange chips.'
+    description: 'Moves +1/+2 extra space if you already have Orange chips (1-2/3+) in your pot.'
   },
   {
     color: 'green', value: 1, price: 4, label: 'Garden Spider',
@@ -78,16 +78,23 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
   },
   {
     color: 'purple', value: 1, price: 9, label: 'Ghost',
-    description: 'Moves forward and provides bonus Victory Points at the end of the round.'
+    description: 'Provides bonus at the end of the round: 1: 1VP, 2: 1VP+Ruby, 3+: 2VP+ +1Start.'
   },
   {
     color: 'black', value: 1, price: 10, label: 'African Death Head Hawkmoth',
-    description: 'Gain a bonus move if your neighbors have fewer Black chips than you.'
+    description: 'Bonus if you have more black than one of your neighbors: +1Start. Both neighbors: +1Start+Ruby.'
   }
 ]
 
-export interface ChipBase { color: ChipColor; value: number }
-export interface Chip extends ChipBase { id: string }
+export interface ChipBase {
+  color: ChipColor;
+  value: number
+}
+
+export interface Chip extends ChipBase {
+  id: string
+  placedAt: number
+}
 
 export const INITIAL_CHIPS: ChipBase[] = [
   { color: 'white', value: 3 },

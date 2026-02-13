@@ -14,13 +14,11 @@ export const useGameStore = defineStore('game', () => {
   const rubies = ref(0)
   const currentBuyingPower = ref(0)
   const hasCollected = ref(false)
+  const currentFieldIndex = ref(0)
 
   // --- Getters (Computed) ---
   const whiteSum = computed(() =>
     pot.value.filter(c => c.color === 'white').reduce((s, c) => s + c.value, 0)
-  )
-  const currentFieldIndex = computed(() =>
-    pot.value.reduce((sum, c) => sum + c.value, 0)
   )
   const isExploded = computed(() => whiteSum.value > 7)
 
@@ -35,16 +33,36 @@ export const useGameStore = defineStore('game', () => {
   function initBag() {
     bag.value = masterInventory.value.map(chip => ({
       ...chip,
-      id: Math.random().toString(36).substring(2, 9)
+      id: Math.random().toString(36).substring(2, 9),
+      placedAt: -1
     }))
   }
 
   function drawChip() {
     if (bag.value.length === 0 || isExploded.value || hasCollected.value) return
-    const randomIndex = Math.floor(Math.random() * bag.value.length)
-    const drawnItems = bag.value.splice(randomIndex, 1)
-    const chip = drawnItems[0]!
-    pot.value.push(chip)
+    const randomIndex = Math.floor(Math.random() * bag.value.length);
+    const [newChip] = bag.value.splice(randomIndex, 1);
+
+    if (newChip) {
+      // 1. Calculate the starting point (last chip's position or 0)
+      const lastPosition = pot.value.length > 0
+        ? pot.value[pot.value.length - 1]?.placedAt ?? 0
+        : 0;
+
+      // 2. Calculate movement (with Red chip bonuses)
+      const movement = getChipMovement(newChip);
+
+      // 3. Place the chip
+      const chipToPlace: Chip = {
+        ...newChip,
+        placedAt: lastPosition + movement
+      };
+
+      pot.value.push(chipToPlace);
+
+      // 4. Update track index (for scoring)
+      currentFieldIndex.value = chipToPlace.placedAt;
+    }
   }
 
   function collectRewards() {
@@ -79,6 +97,22 @@ export const useGameStore = defineStore('game', () => {
     currentBuyingPower.value = 0
     hasCollected.value = false
     initBag()
+  }
+
+  function getChipMovement(chip: ChipBase): number {
+    const baseValue = chip.value;
+
+    if (chip.color === 'red') {
+      const orangeCount = pot.value.filter(c => c.color === 'orange').length;
+
+      if (orangeCount >= 1 && orangeCount <= 2) {
+        return baseValue + 1;
+      } else if (orangeCount >= 3) {
+        return baseValue + 2;
+      }
+    }
+
+    return baseValue;
   }
 
   return {
