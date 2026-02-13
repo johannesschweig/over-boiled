@@ -34,7 +34,8 @@ export const useGameStore = defineStore('game', () => {
     bag.value = masterInventory.value.map(chip => ({
       ...chip,
       id: Math.random().toString(36).substring(2, 9),
-      placedAt: -1
+      placedAt: -1,
+      isTriggered: false
     }))
   }
 
@@ -51,11 +52,13 @@ export const useGameStore = defineStore('game', () => {
 
       // 2. Calculate movement (with Red chip bonuses)
       const movement = getChipMovement(newChip);
+      const isTriggered = newChip.color === 'red' && movement > newChip.value;
 
       // 3. Place the chip
       const chipToPlace: Chip = {
         ...newChip,
-        placedAt: lastPosition + movement
+        placedAt: lastPosition + movement,
+        isTriggered
       };
 
       pot.value.push(chipToPlace);
@@ -94,6 +97,7 @@ export const useGameStore = defineStore('game', () => {
   function startNextRound() {
     round.value++
     pot.value = []
+    currentFieldIndex.value = 0
     currentBuyingPower.value = 0
     hasCollected.value = false
     initBag()

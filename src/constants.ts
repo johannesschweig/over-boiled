@@ -94,6 +94,7 @@ export interface ChipBase {
 export interface Chip extends ChipBase {
   id: string
   placedAt: number
+  isTriggered: boolean
 }
 
 export const INITIAL_CHIPS: ChipBase[] = [

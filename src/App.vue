@@ -21,7 +21,7 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-slate-900 text-slate-100 p-4 font-sans select-none overflow-x-hidden">
 
-    <BagInventory v-if="store.hasCollected" :master-chips="store.masterInventory" />
+    <BagInventory v-if="store.hasCollected" />
 
     <div class="max-w-md mx-auto space-y-6">
 
@@ -38,14 +38,13 @@ onMounted(() => {
         </div>
       </header>
 
-      <TheCauldron v-if="!store.hasCollected" :chips="store.pot" />
+      <TheCauldron v-if="!store.hasCollected" />
 
-      <ShopDisplay v-else :buying-power="store.currentBuyingPower" />
+      <ShopDisplay v-else />
 
-      <ScoreTrack v-if="!store.hasCollected" :current-field="store.currentFieldIndex" />
+      <ScoreTrack v-if="!store.hasCollected" />
 
-      <StatStash v-if="store.hasCollected" :vp="store.totalVictoryPoints" :rubies="store.rubies"
-        :buying-power="store.currentBuyingPower" />
+      <StatStash v-if="store.hasCollected" />
 
       <footer class="pt-4">
         <div v-if="!store.hasCollected" class="flex flex-col gap-3">

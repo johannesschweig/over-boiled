@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { nextTick, watch, ref } from 'vue'
 import { TRACK_DATA } from '@/constants'
+import { useGameStore } from '@/store/gameStore'
 
-interface Props {
-  currentField: number
-}
-
-const props = defineProps<Props>()
+const store = useGameStore()
 const scrollContainer = ref<HTMLElement | null>(null)
 
 // Auto-scroll to keep the current field centered
-watch(() => props.currentField, async () => {
+watch(() => store.currentFieldIndex, async () => {
   await nextTick()
   if (scrollContainer.value) {
-    const activeField = scrollContainer.value.querySelector(`[data-field="${props.currentField}"]`)
+    const activeField = scrollContainer.value.querySelector(`[data-field="${store.currentFieldIndex}"]`)
     if (activeField) {
       activeField.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
     }
@@ -30,9 +27,9 @@ watch(() => props.currentField, async () => {
     <div ref="scrollContainer" class="flex gap-2 overflow-x-auto px-1 py-2 no-scrollbar snap-x">
       <div v-for="(data, index) in TRACK_DATA" :key="index" :data-field="index" :class="[
         'relative flex-shrink-0 w-12 h-18 rounded-2xl border-2 transition-all duration-500 snap-center flex flex-col items-center justify-between py-3',
-        index === currentField
+        index === store.currentFieldIndex
           ? 'bg-amber-500 border-white scale-110 z-10 shadow-[0_0_20px_rgba(251,191,36,0.4)]'
-          : index < currentField
+          : index < store.currentFieldIndex
             ? 'bg-slate-800 border-slate-700 opacity-50'
             : 'bg-slate-900 border-slate-800'
       ]">
@@ -41,7 +38,7 @@ watch(() => props.currentField, async () => {
         </div>
         <div v-else class="h-4"></div>
 
-        <span :class="['text-xl font-black', index === currentField ? 'text-slate-900' : 'text-slate-100']">
+        <span :class="['text-xl font-black', index === store.currentFieldIndex ? 'text-slate-900' : 'text-slate-100']">
           {{ data[0] }}
         </span>
 

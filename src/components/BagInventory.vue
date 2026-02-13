@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { ChipBase, ChipColor } from '@/constants'
+import type { ChipColor } from '@/constants'
 import { chipColorStyle } from '@/utils';
+import { useGameStore } from '@/store/gameStore'
+import Chip from '@/components/Chip.vue';
 
-const props = defineProps<{
-  masterChips: ChipBase[] // Only the total collection
-}>()
-
+const store = useGameStore()
 const isOpen = ref(false)
 
 // Group chips from masterChips only
 const groupedChips = computed(() => {
   const groups: Record<string, { color: ChipColor; value: number; count: number }> = {}
   
-  props.masterChips.forEach(chip => {
+  store.masterInventory.forEach(chip => {
     const key = `${chip.color}-${chip.value}`
     if (!groups[key]) {
       groups[key] = { color: chip.color, value: chip.value, count: 0 }
@@ -41,7 +40,7 @@ const groupedChips = computed(() => {
         Total Inventory
       </h2>
 
-      <div v-if="masterChips.length === 0" class="text-slate-500 italic">
+      <div v-if="store.masterInventory.length === 0" class="text-slate-500 italic">
         Inventory is empty!
       </div>
 
@@ -49,12 +48,7 @@ const groupedChips = computed(() => {
         <div v-for="group in groupedChips" :key="`${group.color}-${group.value}`"
           class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl border border-slate-700">
           <div class="flex items-center gap-3">
-            <div :class="[
-              'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-inner',
-              chipColorStyle(group.color)
-            ]">
-              {{ group.value }}
-            </div>
+            <Chip :chip="group" size="sm"/>
             <span class="capitalize text-sm font-medium text-slate-300">{{ group.color }}</span>
           </div>
           <span class="bg-slate-700 px-2 py-1 rounded text-xs font-mono text-amber-400">
@@ -64,7 +58,7 @@ const groupedChips = computed(() => {
       </div>
 
       <div class="mt-8 pt-6 border-t border-slate-700 text-xs text-slate-500 font-bold">
-        <p>Total Chips in Bag: {{ masterChips.length }}</p>
+        <p>Total Chips in Bag: {{ store.masterInventory.length }}</p>
       </div>
     </div>
   </div>
