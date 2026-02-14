@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useGameStore } from '@/store/gameStore'
-
-// Components
-import BagInventory from './components/BagInventory.vue'
-import ScoreTrack from './components/ScoreTrack.vue'
-import TheCauldron from './components/TheCauldron.vue'
-import ExplosionOverlay from './components/ExplosionOverlay.vue'
-import StatStash from './components/StatStash.vue'
-import ShopDisplay from './components/ShopDisplay.vue'
+import BagInventory from '@/components/BagInventory.vue'
+import ScoreTrack from '@/components/ScoreTrack.vue'
+import TheCauldron from '@/components/TheCauldron.vue'
+import ExplosionOverlay from '@/components/ExplosionOverlay.vue'
+import StatStash from '@/components/StatStash.vue'
+import ShopDisplay from '@/components/ShopDisplay.vue'
+import BlueModal from '@/components/BlueModal.vue'
 
 const store = useGameStore()
 
@@ -65,6 +64,7 @@ onMounted(() => {
         </button>
       </footer>
     </div>
+    <BlueModal v-if="store.draftOptions.length > 0"/>
 
     <ExplosionOverlay v-if="store.isExploded && !store.hasCollected" @reset="store.collectRewards" />
   </div>

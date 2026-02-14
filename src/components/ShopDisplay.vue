@@ -26,7 +26,7 @@ const chipsFilteredAndSorted = computed(() => {
             ? 'bg-slate-700 border-slate-600 hover:border-amber-500'
             : 'bg-slate-800 border-slate-700'
         ]">
-        <div class="grid grid-cols-[40px_1fr_40px] items-center gap-3">
+        <div class="grid grid-cols-[40px_1fr_40px] items-center gap-3 w-full">
           <Chip :chip="item" size="sm"/>
           <div class="text-left">
             <p class="text-sm font-black text-white capitalize">{{ item.color }}</p>

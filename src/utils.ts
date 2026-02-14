@@ -1,4 +1,5 @@
 import type { ChipColor } from '@/constants'
+import type { Chip, ChipBlueprint } from '@/constants'
 
 export const chipColorStyle = (color: ChipColor) => {
   switch (color) {
@@ -19,4 +20,14 @@ export const chipColorStyle = (color: ChipColor) => {
     case 'yellow':
       return 'bg-yellow-400 text-slate-900 border-black/20'
   }
+}
+
+export function createActiveChip(blueprint: ChipBlueprint): Chip {
+  return {
+    color: blueprint.color,
+    value: blueprint.value,
+    id: crypto.randomUUID(), // Native browser UUID
+    placedAt: -1,            // Default state
+    isTriggered: false       // Default state
+  };
 }

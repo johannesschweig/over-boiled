@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { TRACK_DATA, INITIAL_CHIPS, AVAILABLE_CHIPS } from '@/constants'
-import type { Chip, ChipBase, ChipColor } from '@/constants'
+import type { Chip, ChipColor } from '@/constants'
+import { createActiveChip } from '@/utils'
 
 export const useGameStore = defineStore('game', () => {
   // --- State ---
   const round = ref(1)
-  const masterInventory = ref<ChipBase[]>([...INITIAL_CHIPS])
-  const bag = ref<Chip[]>([])
-  const pot = ref<Chip[]>([])
+  const masterInventory = ref<Chip[]>(INITIAL_CHIPS.map(createActiveChip)) // player's inventory
+  const draftOptions = ref<Chip[]>([]) // chips being looked at with blue chip
+  const bag = ref<Chip[]>([]) // in the bag
+  const pot = ref<Chip[]>([]) // in the cauldron
   const totalVictoryPoints = ref(0)
   const rubies = ref(0)
   const currentBuyingPower = ref(0)
@@ -34,56 +36,76 @@ export const useGameStore = defineStore('game', () => {
     }))
   }
 
-  function drawChip() {
-    if (bag.value.length === 0 || isExploded.value || hasCollected.value) return
-
-    const randomIndex = Math.floor(Math.random() * bag.value.length);
-    const [newChip] = bag.value.splice(randomIndex, 1);
-
-    if (!newChip) return;
-
-    // 1. Determine Position
+  // Helper: Handles the logic of adding a chip to the pot
+  function processChipPlacement(baseChip: Chip) {
+    // 1. Determine Start Position (Safe check for empty pot)
     const lastPosition = pot.value.length > 0
-      ? pot.value[pot.value.length - 1]?.placedAt ?? 0
+      ? pot.value[pot.value.length - 1]?.placedAt ?? startPosition.value
       : startPosition.value;
 
-    const movement = getChipMovement(newChip);
+    // 2. Calculate Movement (Red logic is handled inside getChipMovement)
+    const movement = getChipMovement(baseChip);
 
-    // 2. Create the Chip Object
+    // 3. Create the "Real" Chip Object
     const chipToPlace: Chip = {
-      ...newChip,
+      ...baseChip, // Keeps ID if it has one, or implies a new one
+      id: 'id' in baseChip ? baseChip.id : crypto.randomUUID(),
       placedAt: lastPosition + movement,
-      isTriggered: false // Default to false
+      isTriggered: false
     };
 
-    // 3. Initial Trigger Logic (Instant triggers)
-    if (newChip.color === 'red' && movement > newChip.value) chipToPlace.isTriggered = true;
-    if (['purple', 'black', 'blue'].includes(newChip.color)) chipToPlace.isTriggered = true;
+    // 4. Apply Triggers (Red, Purple, Black, Blue)
+    if (baseChip.color === 'red' && movement > baseChip.value) chipToPlace.isTriggered = true;
+    if (['purple', 'black', 'blue'].includes(baseChip.color)) chipToPlace.isTriggered = true;
 
-    // 4. Yellow Logic (The "Mandrake" - removing the previous white chip)
-    if (newChip.color === 'yellow') {
-      // Look at the pot BEFORE we push the yellow chip
+    // 5. Yellow Logic (Mandrake)
+    if (baseChip.color === 'yellow') {
       const lastWhiteIndex = [...pot.value].reverse().findIndex(c => c.color === 'white');
-
       if (lastWhiteIndex !== -1) {
         const actualIndex = pot.value.length - 1 - lastWhiteIndex;
         const [removedWhite] = pot.value.splice(actualIndex, 1);
 
         if (removedWhite) {
-          // Put white back in bag (clean the state)
+          // Return white to bag clean
           bag.value.push({ ...removedWhite, placedAt: -1, isTriggered: false });
-          chipToPlace.isTriggered = true; // Now the yellow chip will glow
+          chipToPlace.isTriggered = true;
         }
       }
     }
 
-    // 5. Push to Pot & Update Field
+    // 6. Push to Pot & Update Track
     pot.value.push(chipToPlace);
     currentFieldIndex.value = chipToPlace.placedAt;
 
-    // 6. Global State Update (Green Chips / End of Round triggers)
-    // We re-evaluate green chips every time the "last/second-to-last" positions change
+    // 7. Green Logic (Global update)
     updateGreenChipTriggers();
+
+    // 8. Blue Logic (The Recursive Part)
+    // If the placed chip is Blue, we immediately draw new options
+    if (baseChip.color === 'blue') {
+      const count = baseChip.value;
+      for (let i = 0; i < count; i++) {
+        if (bag.value.length > 0) {
+          const randomIndex = Math.floor(Math.random() * bag.value.length);
+          const [option] = bag.value.splice(randomIndex, 1);
+          if (option) draftOptions.value.push(option);
+        }
+      }
+    }
+  }
+
+  function drawChip() {
+    if (bag.value.length === 0 || isExploded.value || hasCollected.value) return;
+
+    // Don't draw if we are currently waiting for a Blue choice
+    if (draftOptions.value.length > 0) return;
+
+    const randomIndex = Math.floor(Math.random() * bag.value.length);
+    const [newChip] = bag.value.splice(randomIndex, 1);
+
+    if (newChip) {
+      processChipPlacement(newChip);
+    }
   }
 
   /** * Helper to update Green chips based on their distance from the end
@@ -96,6 +118,32 @@ export const useGameStore = defineStore('game', () => {
         chip.isTriggered = (index >= potLength - 2);
       }
     });
+  }
+
+  function selectBlueOption(index: number | null) {
+    // 1. Handle "Put All Back" (index is null)
+    if (index === null) {
+      bag.value.push(...draftOptions.value.map(c => ({ ...c, placedAt: -1, isTriggered: false })));
+      draftOptions.value = [];
+      return;
+    }
+
+    const selected = draftOptions.value[index];
+    if (!selected) return;
+
+    // 2. Return REJECTED options to the bag
+    // We filter out the one we chose
+    const rejected = draftOptions.value.filter((_, i) => i !== index);
+    bag.value.push(...rejected.map(c => ({ ...c, placedAt: -1, isTriggered: false })));
+
+    // 3. Clear the draft array logic
+    // Important: Clear it BEFORE processing, so the processor sees an empty draft board 
+    // and can fill it up again if the new chip is Blue.
+    draftOptions.value = [];
+
+    // 4. Place the chosen chip
+    // This will trigger Yellow/Red logic, and if it's Blue, refill the draftOptions!
+    processChipPlacement(selected);
   }
 
   function collectRewards() {
@@ -135,7 +183,7 @@ export const useGameStore = defineStore('game', () => {
     const cost = AVAILABLE_CHIPS.filter(c => c.color === color && c.value === value)[0]?.price || 99
     if (currentBuyingPower.value >= cost) {
       currentBuyingPower.value -= cost
-      masterInventory.value.push({ color, value })
+      masterInventory.value.push(createActiveChip({ color, value }))
       return true
     }
     return false
@@ -150,7 +198,7 @@ export const useGameStore = defineStore('game', () => {
     initBag()
   }
 
-  function getChipMovement(chip: ChipBase): number {
+  function getChipMovement(chip: Chip): number {
     const baseValue = chip.value;
 
     if (chip.color === 'red') {
@@ -168,7 +216,7 @@ export const useGameStore = defineStore('game', () => {
 
   return {
     round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
-    whiteSum, currentFieldIndex, isExploded, masterInventory,
-    initBag, drawChip, collectRewards, buyChip, startNextRound
+    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions,
+    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption
   }
 })

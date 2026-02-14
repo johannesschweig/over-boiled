@@ -88,18 +88,17 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
   }
 ]
 
-export interface ChipBase {
+export type ChipBlueprint = Pick<Chip, 'color' | 'value'>;
+
+export interface Chip {
+  id: string;
   color: ChipColor;
-  value: number
+  value: number;
+  placedAt: number;
+  isTriggered: boolean;
 }
 
-export interface Chip extends ChipBase {
-  id: string
-  placedAt: number
-  isTriggered: boolean
-}
-
-export const INITIAL_CHIPS: ChipBase[] = [
+export const INITIAL_CHIPS: ChipBlueprint[] = [
   { color: 'white', value: 3 },
   { color: 'white', value: 2 },
   { color: 'white', value: 2 },
@@ -110,6 +109,11 @@ export const INITIAL_CHIPS: ChipBase[] = [
   { color: 'orange', value: 1 },
   { color: 'green', value: 1 }
 
+  // {color: 'blue', value: 2},
+  // {color: 'blue', value: 2},
+  // {color: 'blue', value: 1},
+  // {color: 'blue', value: 4},
+  // {color: 'blue', value: 1},
   // {color: 'purple', value: 1},
   // {color: 'yellow', value: 1},
   // {color: 'yellow', value: 1},

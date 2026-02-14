@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { chipColorStyle } from '@/utils';
-import type { Chip, ChipBase } from '@/constants';
+import type { Chip, ChipBlueprint } from '@/constants';
 
 defineProps<{
-  chip: Chip | ChipBase
+  chip: Chip | ChipBlueprint
   size?: 'sm' | 'md'
 }>()
 </script>
