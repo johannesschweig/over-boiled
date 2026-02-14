@@ -19,6 +19,7 @@ const store = useGameStore()
         <span class="text-xl font-black text-white">{{ store.rubies }}</span>
         <span class="text-red-500 text-xs">◆</span>
       </div>
+      
     </div>
 
     <div class="flex flex-col items-center justify-center">

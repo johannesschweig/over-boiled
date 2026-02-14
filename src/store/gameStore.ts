@@ -177,6 +177,15 @@ export const useGameStore = defineStore('game', () => {
     totalVictoryPoints.value += victoryPoints
     rubies.value += rub
     hasCollected.value = true
+
+  }
+
+  function spendRubyForMove() {
+    // move start automatically if enough rubies
+    if (rubies.value >= 2) {
+      rubies.value -= 2
+      startPosition.value += 1
+    }
   }
 
   function buyChip(color: ChipColor, value: number) {
@@ -217,6 +226,6 @@ export const useGameStore = defineStore('game', () => {
   return {
     round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
     whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions,
-    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption
+    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove
   }
 })
