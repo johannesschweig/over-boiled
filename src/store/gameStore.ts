@@ -159,7 +159,13 @@ export const useGameStore = defineStore('game', () => {
     if (purpleChips === 2) {
       startPosition.value += 1
     }
-    startPosition.value += pot.value.filter(c => c.color === 'black').length
+    const blackChips = pot.value.filter(c => c.color === 'black').length
+    if (blackChips === 1) {
+      startPosition.value += 1
+    } else if (blackChips > 1) {
+      startPosition.value += 1
+      rubies.value += 1
+    }
 
     // rubies
     const greenRubies = (pot.value[pot.value.length - 1]?.color === 'green' ? 1 : 0) + (pot.value[pot.value.length - 2]?.color === 'green' ? 1 : 0)

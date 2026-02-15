@@ -77,13 +77,13 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
   },
   {
     color: 'purple', value: 1, price: 9,
-    description: 'Provides bonus at the end of the round: 1: 1VP, 2: 1VP+Ruby, 3+: 2VP+ +1Start.'
+    description: 'Provides bonus at the end of the round: 1: 1VP, 2: 1VP+Ruby, 3+: 2VP+1Start.'
   },
   {
     color: 'black', value: 1, price: 10,
     // TODO: neigbor logic
     // description: 'Bonus if you have more black than one of your neighbors: +1Start. Both neighbors: +1Start+Ruby.'
-    description: 'Gain 1 Start.'
+    description: '1: Gain 1 Start. 2: Gain 1 Start and 1 Ruby.'
   }
 ]
 
