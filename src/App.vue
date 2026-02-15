@@ -28,7 +28,7 @@ onMounted(() => {
       <header class="flex justify-between items-center">
         <div>
           <h1 class="text-2xl font-black text-amber-400 uppercase tracking-tighter">Over Boiled</h1>
-          <span class="text-xs text-slate-500">Round: {{ store.round }}</span>
+          <span class="text-xs text-slate-500">Round: {{ store.round }}/8</span>
         </div>
 
         <div :class="[
@@ -76,6 +76,6 @@ onMounted(() => {
 
     <ExplosionOverlay v-if="store.isExploded && !store.hasCollected" @reset="store.collectRewards" />
 
-    <GameEndScreen v-if="store.round === 2 && store.hasCollected" />
+    <GameEndScreen v-if="store.round === 8 && store.hasCollected" />
   </div>
 </template>

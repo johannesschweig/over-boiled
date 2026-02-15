@@ -12,11 +12,12 @@ export const useGameStore = defineStore('game', () => {
   const bag = ref<Chip[]>([]) // in the bag
   const pot = ref<Chip[]>([]) // in the cauldron
   const totalVictoryPoints = ref(0)
-  const rubies = ref(11)
+  const rubies = ref(0)
   const currentBuyingPower = ref(0)
   const hasCollected = ref(false)
   const currentFieldIndex = ref(0)
   const startPosition = ref(0)
+  const roundHistory = ref<number[]>([])
 
   // --- Getters (Computed) ---
   const whiteSum = computed(() =>
@@ -177,6 +178,7 @@ export const useGameStore = defineStore('game', () => {
     totalVictoryPoints.value += victoryPoints
     rubies.value += rub
     hasCollected.value = true
+    roundHistory.value.push(currentBuyingPower.value)
 
   }
 
@@ -223,9 +225,11 @@ export const useGameStore = defineStore('game', () => {
     return baseValue;
   }
 
+
+
   return {
     round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
-    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions,
+    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory,
     initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove
   }
 })
