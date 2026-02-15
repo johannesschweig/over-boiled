@@ -20,68 +20,67 @@ export interface ShopItem {
   value: number
   price: number
   description: string
-  label: string
 }
 
 export const AVAILABLE_CHIPS: ShopItem[] = [
   {
-    color: 'orange', value: 1, price: 3, label: 'Pumpkin',
+    color: 'orange', value: 1, price: 3,
     description: 'No special ability, but a cheap way to fill your pot.'
   },
   {
-    color: 'blue', value: 1, price: 5, label: 'Crow Feather',
+    color: 'blue', value: 1, price: 5,
     description: 'Place it, then draw 1 chip. You may choose to place it or put it back.'
   },
   {
-    color: 'blue', value: 2, price: 10, label: 'Crow Feather',
+    color: 'blue', value: 2, price: 10,
     description: 'Place it, then draw 2 chips. Choose 1 to place.'
   },
   {
-    color: 'blue', value: 4, price: 19, label: 'Crow Feather',
+    color: 'blue', value: 4, price: 19,
     description: 'Place it, then draw 4 chips. Choose 1 to place.'
   },
   {
-    color: 'red', value: 1, price: 6, label: 'Toadstool',
+    color: 'red', value: 1, price: 6,
     description: 'Moves +1/+2 extra space if you already have Orange chips (1-2/3+) in your pot.'
   },
   {
-    color: 'red', value: 2, price: 10, label: 'Toadstool',
+    color: 'red', value: 2, price: 10,
     description: 'Moves +1/+2 extra space if you already have Orange chips (1-2/3+) in your pot.'
   },
   {
-    color: 'red', value: 4, price: 16, label: 'Toadstool',
+    color: 'red', value: 4, price: 16,
     description: 'Moves +1/+2 extra space if you already have Orange chips (1-2/3+) in your pot.'
   },
   {
-    color: 'green', value: 1, price: 4, label: 'Garden Spider',
+    color: 'green', value: 1, price: 4,
     description: 'If this is the last or second-to-last chip, gain 1 Ruby.'
   },
   {
-    color: 'green', value: 2, price: 8, label: 'Garden Spider',
+    color: 'green', value: 2, price: 8,
     description: 'If this is the last or second-to-last chip, gain 1 Ruby.'
   },
   {
-    color: 'green', value: 4, price: 14, label: 'Garden Spider',
+    color: 'green', value: 4, price: 14,
     description: 'If this is the last or second-to-last chip, gain 1 Ruby.'
   },
   {
-    color: 'yellow', value: 1, price: 8, label: 'Mandrake',
+    color: 'yellow', value: 1, price: 8,
     description: 'If the previous chip was a White chip, return that White chip to the bag.'
   },
   {
-    color: 'yellow', value: 1, price: 12, label: 'Mandrake',
+    color: 'yellow', value: 1, price: 12,
     description: 'If the previous chip was a White chip, return that White chip to the bag.'
   },
   {
-    color: 'yellow', value: 4, price: 18, label: 'Mandrake',
+    color: 'yellow', value: 4, price: 18,
     description: 'If the previous chip was a White chip, return that White chip to the bag.'
   },
   {
-    color: 'purple', value: 1, price: 9, label: 'Ghost',
+    color: 'purple', value: 1, price: 9,
     description: 'Provides bonus at the end of the round: 1: 1VP, 2: 1VP+Ruby, 3+: 2VP+ +1Start.'
   },
   {
-    color: 'black', value: 1, price: 10, label: 'African Death Head Hawkmoth',
+    color: 'black', value: 1, price: 10,
     // TODO: neigbor logic
     // description: 'Bonus if you have more black than one of your neighbors: +1Start. Both neighbors: +1Start+Ruby.'
     description: 'Gain 1 Ruby.'

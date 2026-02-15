@@ -12,7 +12,7 @@ export const useGameStore = defineStore('game', () => {
   const bag = ref<Chip[]>([]) // in the bag
   const pot = ref<Chip[]>([]) // in the cauldron
   const totalVictoryPoints = ref(0)
-  const rubies = ref(0)
+  const rubies = ref(11)
   const currentBuyingPower = ref(0)
   const hasCollected = ref(false)
   const currentFieldIndex = ref(0)

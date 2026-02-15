@@ -8,6 +8,7 @@ import ExplosionOverlay from '@/components/ExplosionOverlay.vue'
 import StatStash from '@/components/StatStash.vue'
 import ShopDisplay from '@/components/ShopDisplay.vue'
 import BlueModal from '@/components/BlueModal.vue'
+import GameEndScreen from '@/components/GameEndScreen.vue';
 
 const store = useGameStore()
 
@@ -74,5 +75,7 @@ onMounted(() => {
     <BlueModal v-if="store.draftOptions.length > 0" />
 
     <ExplosionOverlay v-if="store.isExploded && !store.hasCollected" @reset="store.collectRewards" />
+
+    <GameEndScreen v-if="store.round === 2 && store.hasCollected" />
   </div>
 </template>
