@@ -72,10 +72,8 @@ export const useGameStore = defineStore('game', () => {
     // 5. Yellow Logic (Mandrake)
     if (baseChip.color === 'yellow') {
       const lastWhiteIndex = [...pot.value].reverse().findIndex(c => c.color === 'white');
-      if (lastWhiteIndex !== -1) {
-        const actualIndex = pot.value.length - 1 - lastWhiteIndex;
-        const [removedWhite] = pot.value.splice(actualIndex, 1);
-
+      if (lastWhiteIndex === 0) {
+        const [removedWhite] = pot.value.splice(pot.value.length - 1, 1);
         if (removedWhite) {
           // Return white to bag clean
           bag.value.push({ ...removedWhite, placedAt: -1, isTriggered: false });
