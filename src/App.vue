@@ -9,6 +9,7 @@ import StatStash from '@/components/StatStash.vue'
 import ShopDisplay from '@/components/ShopDisplay.vue'
 import BlueModal from '@/components/BlueModal.vue'
 import GameEndScreen from '@/components/GameEndScreen.vue';
+import Header from '@/components/Header.vue'
 
 const store = useGameStore()
 
@@ -25,20 +26,7 @@ onMounted(() => {
 
     <div class="max-w-md mx-auto space-y-6">
 
-      <header class="flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-black text-amber-400 uppercase tracking-tighter">Over Boiled</h1>
-          <span class="text-xs text-slate-500">Round: {{ store.round }}/8</span>
-        </div>
-
-        <div :class="[
-          'px-4 py-2 rounded-lg border-2 font-mono font-bold transition-all duration-500',
-          store.isExploded ? 'bg-red-600 border-red-400 animate-pulse' : 'bg-slate-800 border-slate-700'
-        ]">
-          {{ store.whiteSum }} / 7
-        </div>
-      </header>
-
+      <Header />
       <TheCauldron v-if="!store.hasCollected" />
 
       <ShopDisplay v-else />
