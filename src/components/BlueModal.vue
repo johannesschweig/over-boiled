@@ -15,7 +15,8 @@ const store = useGameStore()
           <Chip :chip="chip" @click="store.selectBlueOption(i)" class="cursor-pointer hover:scale-110" />
         </div>
       </div>
-      <button @click="store.selectBlueOption(null)" class="w-full py-3 bg-amber-500 text-slate-900 rounded-2xl font-black text-base shadow-[0_6px_0_0_#b45309] active:translate-y-1 active:shadow-none transition-all uppercase tracking-tight">Choose None</button>
+      <button @click="store.selectBlueOption(null)"
+        class="w-full py-2 text-slate-400 border-2 border-slate-700 rounded-xl font-bold text-sm transition-all uppercase tracking-tight">Skip</button>
     </div>
   </div>
 </template>

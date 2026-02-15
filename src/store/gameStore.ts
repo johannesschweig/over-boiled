@@ -25,7 +25,13 @@ export const useGameStore = defineStore('game', () => {
   )
   const isExploded = computed(() => whiteSum.value > 7)
 
-
+  // if the player is in danger to explode next turn
+  const danger = computed(() => {
+    if (bag.value.length === 0) return false;
+    // highest white chip value in the bag
+    const maxWhite = Math.max(...bag.value.filter(c => c.color === 'white').map(c => c.value));
+    return maxWhite + whiteSum.value > 7
+  })
 
   // --- Actions (Methods) ---
   function initBag() {
@@ -235,11 +241,9 @@ export const useGameStore = defineStore('game', () => {
     return baseValue;
   }
 
-
-
   return {
     round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
-    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory,
+    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory, danger,
     initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove
   }
 })

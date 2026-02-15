@@ -87,7 +87,7 @@ onMounted(() => {
     <div class="bg-slate-800 border-4 border-amber-500 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center">
 
       <h1 class="text-4xl font-black text-amber-500 mb-2 uppercase tracking-widest">The Festival Ends!</h1>
-      <p v-if="dataSent" class="text-slate-400 mb-8 italic">The fires die down in Quedlinburg...</p>
+      <p v-if="dataSent" class="text-slate-400 mb-8 italic">The fires die down...</p>
 
       <div class="bg-slate-900 rounded-xl p-6 space-y-4 mb-8 text-lg">
 
