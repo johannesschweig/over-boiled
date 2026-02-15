@@ -68,7 +68,7 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
     description: 'If the previous chip was a White chip, return that White chip to the bag.'
   },
   {
-    color: 'yellow', value: 1, price: 12,
+    color: 'yellow', value: 2, price: 12,
     description: 'If the previous chip was a White chip, return that White chip to the bag.'
   },
   {
@@ -83,7 +83,7 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
     color: 'black', value: 1, price: 10,
     // TODO: neigbor logic
     // description: 'Bonus if you have more black than one of your neighbors: +1Start. Both neighbors: +1Start+Ruby.'
-    description: 'Gain 1 Ruby.'
+    description: 'Gain 1 Start.'
   }
 ]
 
@@ -106,19 +106,19 @@ export const INITIAL_CHIPS: ChipBlueprint[] = [
   { color: 'white', value: 1 },
   { color: 'white', value: 1 },
   { color: 'orange', value: 1 },
-  { color: 'green', value: 1 }
+  { color: 'green', value: 1 },
 
-  // {color: 'blue', value: 2},
-  // {color: 'blue', value: 2},
-  // {color: 'blue', value: 1},
-  // {color: 'blue', value: 4},
-  // {color: 'blue', value: 1},
-  // {color: 'purple', value: 1},
-  // {color: 'yellow', value: 1},
-  // {color: 'yellow', value: 1},
-  // {color: 'yellow', value: 1},
-  // {color: 'purple', value: 1},
-  // {color: 'purple', value: 1},
-  // {color: 'purple', value: 1},
+  // { color: 'blue', value: 2 },
+  // { color: 'blue', value: 2 },
+  // { color: 'blue', value: 1 },
+  // { color: 'blue', value: 4 },
+  // { color: 'blue', value: 1 },
+  // { color: 'purple', value: 1 },
+  // { color: 'yellow', value: 1 },
+  // { color: 'yellow', value: 1 },
+  // { color: 'yellow', value: 1 },
+  // { color: 'purple', value: 1 },
+  // { color: 'purple', value: 1 },
+  // { color: 'purple', value: 1 },
 ]
 

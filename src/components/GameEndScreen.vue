@@ -77,6 +77,7 @@ async function saveToGoogleSheets() {
 }
 
 onMounted(() => {
+  if (dataSent.value) return;
   saveToGoogleSheets();
 })
 </script>

@@ -29,6 +29,10 @@ export const useGameStore = defineStore('game', () => {
 
   // --- Actions (Methods) ---
   function initBag() {
+    // Rule: In Round 6, add an extra white chip to the bag
+    if (round.value === 6) {
+      masterInventory.value.push(createActiveChip({ color: 'white', value: 1 }))
+    }
     bag.value = masterInventory.value.map(chip => ({
       ...chip,
       id: Math.random().toString(36).substring(2, 9),
@@ -155,12 +159,12 @@ export const useGameStore = defineStore('game', () => {
     if (purpleChips === 2) {
       startPosition.value += 1
     }
+    startPosition.value += pot.value.filter(c => c.color === 'black').length
 
     // rubies
     const greenRubies = (pot.value[pot.value.length - 1]?.color === 'green' ? 1 : 0) + (pot.value[pot.value.length - 2]?.color === 'green' ? 1 : 0)
     const purpleRubies = purpleChips === 2 ? 1 : 0
-    const blackRubies = pot.value.filter(c => c.color === 'black').length
-    const rub = hasRuby ? 1 : 0 + greenRubies + purpleRubies + blackRubies
+    const rub = hasRuby ? 1 : 0 + greenRubies + purpleRubies
 
     // victory points
     const purpleVP = purpleChips === 0 ? 0 : purpleChips <= 2 ? 1 : 2
