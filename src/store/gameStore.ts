@@ -174,7 +174,7 @@ export const useGameStore = defineStore('game', () => {
     // rubies
     const greenRubies = (pot.value[pot.value.length - 1]?.color === 'green' ? 1 : 0) + (pot.value[pot.value.length - 2]?.color === 'green' ? 1 : 0)
     const purpleRubies = purpleChips === 2 ? 1 : 0
-    const rub = hasRuby ? 1 : 0 + greenRubies + purpleRubies
+    const rub = (hasRuby ? 1 : 0) + greenRubies + purpleRubies
 
     // victory points
     const purpleVP = purpleChips === 0 ? 0 : purpleChips <= 2 ? 1 : 2
