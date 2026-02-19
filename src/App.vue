@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useGameStore } from '@/store/gameStore'
-import BagInventory from '@/components/BagInventory.vue'
-import ScoreTrack from '@/components/ScoreTrack.vue'
+import Bag from '@/components/Bag.vue'
+import Track from '@/components/Track.vue'
 import Pot from '@/components/Pot.vue'
 import ExplosionOverlay from '@/components/ExplosionOverlay.vue'
-import StatStash from '@/components/StatStash.vue'
-import ShopDisplay from '@/components/ShopDisplay.vue'
+import Stats from '@/components/Stats.vue'
+import Shop from '@/components/Shop.vue'
 import BlueModal from '@/components/BlueModal.vue'
 import GameEndScreen from '@/components/GameEndScreen.vue';
 import Header from '@/components/Header.vue'
@@ -23,13 +23,13 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-slate-900 text-slate-100 p-4 font-sans select-none overflow-x-hidden">
-    <BagInventory v-if="store.hasCollected" />
+    <Bag v-if="store.hasCollected" />
     <div class="max-w-md mx-auto space-y-6">
       <Header />
       <Pot v-if="!store.hasCollected" />
-      <ShopDisplay v-else />
-      <ScoreTrack v-if="!store.hasCollected" />
-      <StatStash v-if="store.hasCollected" />
+      <Shop v-else />
+      <Track v-if="!store.hasCollected" />
+      <Stats v-if="store.hasCollected" />
       <Footer />
     </div>
     <BlueModal v-if="store.draftOptions.length > 0" />

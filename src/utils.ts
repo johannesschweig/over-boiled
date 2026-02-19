@@ -31,3 +31,7 @@ export function createActiveChip(blueprint: ChipBlueprint): Chip {
     isTriggered: false       // Default state
   };
 }
+
+export const getImageUrl = (path: string) => {
+  return new URL(`/src/assets/${path}`, import.meta.url).href
+}

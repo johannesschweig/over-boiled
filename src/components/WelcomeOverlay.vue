@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useGameStore } from '@/store/gameStore'
+import { getImageUrl } from '@/utils'
 
 const store = useGameStore()
 
@@ -14,7 +15,7 @@ const slides = [
   },
   {
     "title": "Master the Track",
-    "description": "Chip values move you forward: a '2-chip' moves you 2 spaces. Your final position determines your Buying Power, Victory Points <img src='src/assets/vp.png' class='inline-icon' />, and Rubies <img src='src/assets/ruby.png' class='inline-icon' />.",
+    "description": "Chip values move you forward: a '2-chip' moves you 2 spaces. Your final position determines your Buying Power (💰), Victory Points (★), and Rubies (◆).",
     "image": "2-track.png",
   },
   {
@@ -76,7 +77,7 @@ const startGame = () => {
 
           <p class="text-slate-300 leading-relaxed mb-8 min-h-20" v-html="slides[currentSlide]?.description"></p>
 
-          <img :src="`/src/assets/${slides[currentSlide]?.image}`" :alt="slides[currentSlide]?.title"
+          <img :src="getImageUrl(slides[currentSlide]?.image ?? '')" :alt="slides[currentSlide]?.title ?? ''"
             class="w-full h-48 object-contain mb-4 rounded-2xl" />
 
           <div class="flex flex-col gap-4">
@@ -96,6 +97,6 @@ const startGame = () => {
 
 <style scoped>
 /* Keeping your transition logic */
-.fade-enter-active, .fade-leave-active { transition: all 0.5s ease; }
+.fade-enter-active, .fade-leave-active { transition: all 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: scale(0.95); }
 </style>
