@@ -26,7 +26,7 @@ watch(() => store.currentFieldIndex, async () => {
 
     <div ref="scrollContainer" class="flex gap-2 overflow-x-auto px-1 py-2 no-scrollbar snap-x">
       <div v-for="(data, index) in TRACK_DATA" :key="index" :data-field="index" v-show="index >= store.startPosition"
-        :class="['relative shrink-0 w-12 h-18 rounded-2xl border-2 transition-all duration-500 snap-center flex flex-col items-center justify-between py-3',
+        :class="['relative shrink-0 w-12 h-18 rounded-2xl border-2 transition-all duration-500 snap-center grid grid-rows-[16px_1fr_16px] items-center justify-items-center p-0.5',
           index === store.startPosition && index === store.currentFieldIndex
             ? 'bg-emerald-500 border-white scale-110 z-10 shadow-[0_0_20px_rgba(16,185,129,0.4)]'
             : index === store.currentFieldIndex
@@ -35,18 +35,16 @@ watch(() => store.currentFieldIndex, async () => {
                 ? 'bg-slate-900 border-slate-800'
                 : 'bg-slate-900  border-slate-800 opacity-50'
         ]">
-        <div v-if="data[1] > 0" class="bg-blue-600 text-[10px] px-1.5 rounded-sm font-bold">
+        <div v-if="data[1] > 0" class="bg-blue-600 text-[10px] px-1.5 rounded-sm font-bold row-start-1">
           {{ data[1] }}
         </div>
-        <div v-else class="h-4"></div>
 
-        <span :class="['text-xl font-black', index === store.currentFieldIndex ? 'text-slate-900' : 'text-slate-100']">
+        <div
+          :class="['text-xl font-black row-start-2', index === store.currentFieldIndex ? 'text-slate-900' : 'text-slate-100']">
           {{ data[0] }}
-        </span>
-
-        <div class="h-4">
-          <span v-if="data[2]" class="text-red-500 text-xs">◆</span>
         </div>
+
+        <div v-if="data[2]" class="text-red-500 text-xs row-start-3">◆</div>
       </div>
     </div>
   </div>
