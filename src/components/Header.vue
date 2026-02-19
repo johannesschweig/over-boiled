@@ -1,31 +1,21 @@
 <script setup lang="ts">
 import { useGameStore } from '@/store/gameStore';
-import { computed } from 'vue';
 const store = useGameStore();
 
-const warningStyle = computed(() => {
-  if (store.isExploded) {
-    return 'bg-red-600 border-red-400 animate-pulse';
-  } else if (store.danger && !store.isExploded) {
-    return 'border-orange-400';
-  } else {
-    return 'bg-slate-800 border-slate-700';
-  }
-})
+function showWelcome() {
+  store.toggleWelcome(false);
+}
 </script>
 
 <template>
   <header class="flex justify-between items-center">
     <div>
-      <h1 class="text-2xl font-black text-amber-400 uppercase tracking-tighter">Over Boiled</h1>
+      <div class="flex items-center gap-2 text-amber-400">
+        <h1 class="text-2xl font-black uppercase tracking-tighter">Over Boiled</h1>
+        <button @click="showWelcome"
+          class="text-sm rounded-full border border-amber-400 h-5 w-5 flex items-center justify-center hover:border-amber-500 hover:text-amber-500 cursor-pointer hover:bg-amber-900">?</button>
+      </div>
       <span class="text-xs text-slate-500">Round: {{ store.round }}/8</span>
-    </div>
-
-    <div :class="[
-      'px-4 py-2 rounded-lg border-2 font-mono font-bold transition-all duration-500',
-      warningStyle
-    ]">
-      {{ store.whiteSum }} / 7
     </div>
   </header>
 </template>

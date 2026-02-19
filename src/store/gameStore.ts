@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { TRACK_DATA, INITIAL_CHIPS, AVAILABLE_CHIPS } from '@/constants'
 import type { Chip, ChipColor } from '@/constants'
 import { createActiveChip } from '@/utils'
@@ -10,7 +10,7 @@ export const useGameStore = defineStore('game', () => {
   const masterInventory = ref<Chip[]>(INITIAL_CHIPS.map(createActiveChip)) // player's inventory
   const draftOptions = ref<Chip[]>([]) // chips being looked at with blue chip
   const bag = ref<Chip[]>([]) // in the bag
-  const pot = ref<Chip[]>([]) // in the cauldron
+  const pot = ref<Chip[]>([]) // in the pot
   const totalVictoryPoints = ref(0)
   const rubies = ref(1)
   const currentBuyingPower = ref(0)
@@ -18,6 +18,7 @@ export const useGameStore = defineStore('game', () => {
   const currentFieldIndex = ref(0)
   const startPosition = ref(0)
   const roundHistory = ref<number[]>([])
+  const hideWelcome = ref(localStorage.getItem('hide_welcome') === 'true')
 
   // --- Getters (Computed) ---
   const whiteSum = computed(() =>
@@ -32,6 +33,11 @@ export const useGameStore = defineStore('game', () => {
     const maxWhite = Math.max(...bag.value.filter(c => c.color === 'white').map(c => c.value));
     return maxWhite + whiteSum.value > 7
   })
+
+  // --- Watchers ---
+  watch(hideWelcome, (newValue) => {
+    localStorage.setItem('hide_welcome', newValue.toString());
+  });
 
   // --- Actions (Methods) ---
   function initBag() {
@@ -239,9 +245,13 @@ export const useGameStore = defineStore('game', () => {
     return baseValue;
   }
 
+  function toggleWelcome(value: boolean) {
+    hideWelcome.value = value;
+  }
+
   return {
-    round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected,
-    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory, danger,
-    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove
+    round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected, startPosition,
+    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory, danger, hideWelcome,
+    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove, toggleWelcome
   }
 })

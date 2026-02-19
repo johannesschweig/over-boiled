@@ -29,15 +29,15 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
   },
   {
     color: 'blue', value: 1, price: 5,
-    description: 'Place it, then draw 1 chip. You may choose to place it or put it back.'
+    description: 'After placing it, draw 1 chip. Place it or put it back.'
   },
   {
     color: 'blue', value: 2, price: 10,
-    description: 'Place it, then draw 2 chips. Choose 1 to place.'
+    description: 'After placing it, draw 2 chips. Choose 1 or none to place.'
   },
   {
     color: 'blue', value: 4, price: 19,
-    description: 'Place it, then draw 4 chips. Choose 1 to place.'
+    description: 'After placing it, draw 4 chips. Choose 1 or none to place.'
   },
   {
     color: 'red', value: 1, price: 6,
@@ -108,12 +108,23 @@ export const INITIAL_CHIPS: ChipBlueprint[] = [
   { color: 'orange', value: 1 },
   { color: 'green', value: 1 },
 
+  // { color: 'orange', value: 1 },
+  // { color: 'orange', value: 1 },
+  // { color: 'orange', value: 1 },
+  // { color: 'green', value: 1 },
+  // { color: 'green', value: 1 },
+  // { color: 'green', value: 1 },
+  // { color: 'white', value: 1 },
+  // { color: 'white', value: 1 },
+  // { color: 'white', value: 1 },
   // { color: 'blue', value: 2 },
   // { color: 'blue', value: 2 },
   // { color: 'blue', value: 1 },
   // { color: 'blue', value: 4 },
   // { color: 'blue', value: 1 },
   // { color: 'purple', value: 1 },
+  // { color: 'yellow', value: 1 },
+  // { color: 'yellow', value: 1 },
   // { color: 'yellow', value: 1 },
   // { color: 'yellow', value: 1 },
   // { color: 'yellow', value: 1 },

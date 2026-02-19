@@ -21,18 +21,20 @@ watch(() => store.currentFieldIndex, async () => {
 <template>
   <div class="w-full bg-slate-950 p-4 rounded-3xl border-2 border-slate-800 shadow-inner">
     <div class="flex items-center justify-between mb-2 px-2">
-      <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Progress Track</span>
+      <span class="heading-caps">Progress Track</span>
     </div>
 
     <div ref="scrollContainer" class="flex gap-2 overflow-x-auto px-1 py-2 no-scrollbar snap-x">
-      <div v-for="(data, index) in TRACK_DATA" :key="index" :data-field="index" :class="[
-        'relative shrink-0 w-12 h-18 rounded-2xl border-2 transition-all duration-500 snap-center flex flex-col items-center justify-between py-3',
-        index === store.currentFieldIndex
-          ? 'bg-amber-500 border-white scale-110 z-10 shadow-[0_0_20px_rgba(251,191,36,0.4)]'
-          : index < store.currentFieldIndex
-            ? 'bg-slate-800 border-slate-700 opacity-50'
-            : 'bg-slate-900 border-slate-800'
-      ]">
+      <div v-for="(data, index) in TRACK_DATA" :key="index" :data-field="index" v-show="index >= store.startPosition"
+        :class="['relative shrink-0 w-12 h-18 rounded-2xl border-2 transition-all duration-500 snap-center flex flex-col items-center justify-between py-3',
+          index === store.startPosition && index === store.currentFieldIndex
+            ? 'bg-emerald-500 border-white scale-110 z-10 shadow-[0_0_20px_rgba(16,185,129,0.4)]'
+            : index === store.currentFieldIndex
+              ? 'bg-amber-500 border-white scale-110 z-10 shadow-[0_0_20px_rgba(251,191,36,0.4)]'
+              : index >= store.currentFieldIndex
+                ? 'bg-slate-900 border-slate-800'
+                : 'bg-slate-900  border-slate-800 opacity-50'
+        ]">
         <div v-if="data[1] > 0" class="bg-blue-600 text-[10px] px-1.5 rounded-sm font-bold">
           {{ data[1] }}
         </div>

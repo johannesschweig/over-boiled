@@ -30,19 +30,14 @@ function buyChip(color: ChipColor, value: number) {
 </script>
 
 <template>
-  <div class="bg-slate-800 rounded-3xl py-2 px-4 border-4 border-slate-700 shadow-2xl overflow-y-auto max-h-100">
-    <div class="text-xs font-black uppercase tracking-widest text-slate-500 mt-2 mb-2">Shop</div>
+  <div class="bg-slate-800 rounded-3xl py-2 px-4 border-2 border-slate-700 shadow-2xl overflow-y-auto max-h-100">
+    <div class="heading-caps mt-2 mb-2">Shop</div>
     <div class="text-xs text-slate-400 mb-4">Buy 1 or 2 different chips</div>
 
     <div v-if="chipsFilteredAndSorted.length > 0" class="grid grid-cols-1 gap-3">
       <button v-for="item in chipsFilteredAndSorted" :key="`${item.color}-${item.value}`"
         @click="buyChip(item.color, item.value)" :disabled="store.currentBuyingPower < item.price"
-        class="flex items-center justify-between p-3 rounded-2xl border-2 transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100"
-        :class="[
-          store.currentBuyingPower >= item.price
-            ? 'bg-slate-700 border-slate-600 hover:border-amber-500'
-            : 'bg-slate-800 border-slate-700'
-        ]">
+        class="flex items-center justify-between bg-slate-700 p-3 rounded-2xl active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100">
         <div class="grid grid-cols-[40px_1fr_40px] items-center gap-3 w-full">
           <Chip :chip="item" size="sm" />
           <div class="text-left">

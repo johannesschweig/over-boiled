@@ -30,22 +30,22 @@ const groupedChips = computed(() => {
     <button @click="isOpen = !isOpen"
       class="w-10 h-50 bg-slate-800 border-l border-y border-slate-700 rounded-l-2xl self-center flex items-center justify-center text-amber-400 hover:text-white transition-colors shadow-xl">
       <span class="rotate-90 font-bold tracking-widest text-xs uppercase whitespace-nowrap">
-        {{ isOpen ? 'Close' : 'My Collection' }}
+        {{ isOpen ? 'Close' : 'Your Bag' }}
       </span>
     </button>
 
     <div class="w-64 bg-slate-800 border-l border-slate-700 shadow-2xl p-6 overflow-y-auto">
       <h2 class="text-xl font-black text-amber-400 mb-6 uppercase tracking-tight">
-        Total Inventory
+        Your Bag
       </h2>
 
       <div v-if="store.masterInventory.length === 0" class="text-slate-500 italic">
-        Inventory is empty!
+        Your bag is empty!
       </div>
 
       <div class="space-y-3">
         <div v-for="group in groupedChips" :key="`${group.color}-${group.value}`"
-          class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl border border-slate-700">
+          class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl">
           <div class="flex items-center gap-3">
             <Chip :chip="group" size="sm"/>
             <span class="capitalize text-sm font-medium text-slate-300">{{ group.color }}</span>

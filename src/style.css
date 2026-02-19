@@ -1,1 +1,78 @@
 @import "tailwindcss";
+
+@layer components {
+
+  /* --- Containers & Layout --- */
+  .panel-dark {
+    @apply bg-slate-800 border-2 border-slate-700 rounded-3xl shadow-2xl;
+  }
+
+  .panel-inset {
+    @apply bg-slate-950/50 rounded-2xl border border-slate-800 shadow-inner;
+  }
+
+  .overlay-backdrop {
+    @apply fixed inset-0 backdrop-blur-sm flex items-center justify-center p-6 z-50;
+  }
+
+  .heading-secondary {
+    @apply text-xl font-black text-amber-400 uppercase tracking-tight;
+  }
+
+  .heading-caps {
+    @apply text-xs uppercase font-black tracking-widest text-slate-500;
+  }
+
+  /* --- Buttons --- */
+  .btn-base {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+  }
+
+  .btn-orange {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+    @apply bg-amber-600 hover:bg-amber-500 text-white py-4 rounded-xl shadow-lg;
+  }
+
+  .btn-orange-outline {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+    @apply border-2 border-amber-600 text-amber-500 hover:border-amber-500 hover:bg-amber-500 hover:text-white py-4 rounded-xl shadow-lg;
+  }
+
+  .btn-green {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+    @apply bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-xl shadow-lg;
+  }
+
+  .btn-danger {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+    @apply bg-red-600 hover:bg-red-500 text-white py-4 rounded-xl shadow-lg;
+  }
+
+  .btn-outline {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+    @apply border-2 border-slate-700 text-slate-400 hover:border-amber-500 hover:text-amber-400 py-2 rounded-xl;
+  }
+
+  .btn-ghost {
+    @apply font-bold uppercase transition-all active:scale-95 disabled:opacity-40 disabled:grayscale disabled:active:scale-100 cursor-pointer;
+    @apply py-2 px-4 text-slate-500 tracking-widest text-sm hover:text-amber-400 bg-transparent border-none shadow-none;
+  }
+
+  .btn-3d {
+    @apply font-black text-xl uppercase tracking-tight transition-all active:translate-y-1 active:shadow-none disabled:bg-slate-700 disabled:text-slate-500 disabled:shadow-none disabled:active:translate-y-0 py-5 rounded-2xl;
+  }
+
+  .btn-3d-orange {
+    @apply font-black text-xl uppercase tracking-tight transition-all active:translate-y-1 active:shadow-none disabled:bg-slate-700 disabled:text-slate-500 disabled:shadow-none disabled:active:translate-y-0 py-5 rounded-2xl;
+    @apply  bg-amber-500 text-slate-900 shadow-[0_6px_0_0_#b45309] hover:bg-amber-400;
+  }
+
+  .btn-3d-blue {
+    @apply font-black text-xl uppercase tracking-tight transition-all active:translate-y-1 active:shadow-none disabled:bg-slate-700 disabled:text-slate-500 disabled:shadow-none disabled:active:translate-y-0 py-5 rounded-2xl;
+    @apply bg-blue-600 text-white shadow-[0_6px_0_0_#1e40af] hover:bg-blue-500;
+  }
+
+  .inline-icon {
+    @apply inline-block h-5 w-5 mx-1 align-text-bottom object-contain;
+  }
+}

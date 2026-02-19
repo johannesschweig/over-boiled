@@ -18,7 +18,7 @@ defineEmits(['confirm'])
     <div class="text-center mb-6">
       <h3 class="text-amber-500 font-black uppercase tracking-widest">End of Round Results</h3>
       <p v-if="isExploded" class="text-red-500 text-xs font-bold uppercase mt-1 animate-pulse">
-        ⚠️ Cauldron Exploded!
+        ⚠️ The Pot Exploded!
       </p>
     </div>
 
