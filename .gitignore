@@ -1,6 +1,7 @@
 # my edits
 res/
 .env
+analysis/
 
 # Logs
 logs

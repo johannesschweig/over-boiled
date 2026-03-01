@@ -4,7 +4,6 @@ import { useGameStore } from '@/store/gameStore'
 import Bag from '@/components/Bag.vue'
 import Track from '@/components/Track.vue'
 import Pot from '@/components/Pot.vue'
-import ExplosionOverlay from '@/components/ExplosionOverlay.vue'
 import Stats from '@/components/Stats.vue'
 import Shop from '@/components/Shop.vue'
 import BlueModal from '@/components/BlueModal.vue'
@@ -33,7 +32,6 @@ onMounted(() => {
       <Footer />
     </div>
     <BlueModal v-if="store.draftOptions.length > 0" />
-    <ExplosionOverlay v-if="store.isExploded && !store.hasCollected" @reset="store.collectRewards" />
     <GameEndScreen v-if="store.round === 8 && store.hasCollected" />
     <WelcomeOverlay />
   </div>

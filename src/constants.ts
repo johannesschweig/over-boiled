@@ -83,7 +83,7 @@ export const AVAILABLE_CHIPS: ShopItem[] = [
     color: 'black', value: 1, price: 10,
     // TODO: neigbor logic
     // description: 'Bonus if you have more black than one of your neighbors: +1Start. Both neighbors: +1Start+Ruby.'
-    description: '1: Gain 1 Start. 2: Gain 1 Start and 1 Ruby.'
+    description: 'Bonus for the number of black chips in the pot. 1 chip: +1 Start. 2 chips: +1 Start and 1 Ruby.'
   }
 ]
 

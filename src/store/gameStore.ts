@@ -19,6 +19,8 @@ export const useGameStore = defineStore('game', () => {
   const startPosition = ref(0)
   const roundHistory = ref<number[]>([])
   const hideWelcome = ref(localStorage.getItem('hide_welcome') === 'true')
+  const showBoomBanner = ref(false)
+  const explosionPenalty = ref<'VP' | 'BP' | null>(null)
 
   // --- Getters (Computed) ---
   const whiteSum = computed(() =>
@@ -54,7 +56,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   // Helper: Handles the logic of adding a chip to the pot
-  function processChipPlacement(baseChip: Chip) {
+  async function processChipPlacement(baseChip: Chip) {
     // 1. Determine Start Position (Safe check for empty pot)
     const lastPosition = pot.value.length > 0
       ? pot.value[pot.value.length - 1]?.placedAt ?? startPosition.value
@@ -95,7 +97,14 @@ export const useGameStore = defineStore('game', () => {
     // 7. Green Logic (Global update)
     updateGreenChipTriggers();
 
-    // 8. Blue Logic (The Recursive Part)
+    // 8. Check for Explosion (White chips sum > 7)
+    if (isExploded.value) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      showBoomBanner.value = true;
+      return; // Stop here! Don't trigger Blue logic if we exploded.
+    }
+
+    // 9. Blue Logic (The Recursive Part)
     // If the placed chip is Blue, we immediately draw new options
     if (baseChip.color === 'blue') {
       const count = baseChip.value;
@@ -107,6 +116,7 @@ export const useGameStore = defineStore('game', () => {
         }
       }
     }
+
   }
 
   function drawChip() {
@@ -164,7 +174,21 @@ export const useGameStore = defineStore('game', () => {
   function collectRewards() {
     const index = Math.min(currentFieldIndex.value, 33)
     const trackField = TRACK_DATA[index] || [0, 0, false]
-    const [buyingPower, vp, hasRuby] = trackField
+    var [buyingPower, vp, hasRuby] = trackField
+
+    // exploded
+    if (isExploded.value) {
+      if (explosionPenalty.value === 'BP') { // chosen BP
+        currentBuyingPower.value = buyingPower;
+        vp = 0
+      } else { // chosen VP
+        currentBuyingPower.value = 0;
+      }
+    } else {
+      currentBuyingPower.value = buyingPower
+    }
+
+    // start
     const purpleChips = pot.value.filter(c => c.color === 'purple').length
     if (purpleChips === 2) {
       startPosition.value += 1
@@ -188,13 +212,6 @@ export const useGameStore = defineStore('game', () => {
 
     if (hasCollected.value) return
 
-    if (isExploded.value) {
-      // Manual Rule: VP or Buying Power. Defaulting to VP for now.
-      currentBuyingPower.value = 0
-
-    } else {
-      currentBuyingPower.value = buyingPower
-    }
     totalVictoryPoints.value += victoryPoints
     rubies.value += rub
     hasCollected.value = true
@@ -226,6 +243,7 @@ export const useGameStore = defineStore('game', () => {
     currentFieldIndex.value = startPosition.value
     currentBuyingPower.value = 0
     hasCollected.value = false
+    showBoomBanner.value = false;
     initBag()
   }
 
@@ -249,9 +267,14 @@ export const useGameStore = defineStore('game', () => {
     hideWelcome.value = value;
   }
 
+  function chooseExplosionPenalty(choice: 'BP' | 'VP') {
+    explosionPenalty.value = choice;
+    collectRewards();
+  }
+
   return {
     round, bag, pot, totalVictoryPoints, rubies, currentBuyingPower, hasCollected, startPosition,
-    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory, danger, hideWelcome,
-    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove, toggleWelcome
+    whiteSum, currentFieldIndex, isExploded, masterInventory, draftOptions, roundHistory, danger, hideWelcome, showBoomBanner,
+    initBag, drawChip, collectRewards, buyChip, startNextRound, selectBlueOption, spendRubyForMove, toggleWelcome, chooseExplosionPenalty,
   }
 })
