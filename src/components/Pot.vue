@@ -19,7 +19,7 @@ const warningStyle = computed(() => {
 
 <template>
   <main :class="[
-    'max-w-md mx-auto relative h-64 w-full rounded-3xl border-2 transition-all duration-300 overflow-hidden',
+    'max-w-md mx-auto relative w-full rounded-3xl border-2 transition-all duration-300 overflow-hidden',
     store.isExploded ? 'animate-boom border-red-500' : 'bg-slate-800 border-slate-700'
   ]">
     <div class="flex justify-between mt-3 mx-3 items-center relative z-30">

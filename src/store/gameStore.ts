@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { TRACK_DATA, INITIAL_CHIPS, AVAILABLE_CHIPS } from '@/constants'
 import type { Chip, ChipColor } from '@/constants'
-import { createActiveChip } from '@/utils'
+import { createActiveChip, generateId } from '@/utils'
 
 export const useGameStore = defineStore('game', () => {
   // --- State ---
@@ -68,7 +68,7 @@ export const useGameStore = defineStore('game', () => {
     // 3. Create the "Real" Chip Object
     const chipToPlace: Chip = {
       ...baseChip, // Keeps ID if it has one, or implies a new one
-      id: 'id' in baseChip ? baseChip.id : crypto.randomUUID(),
+      id: 'id' in baseChip ? baseChip.id : generateId(),
       placedAt: lastPosition + movement,
       isTriggered: false
     };

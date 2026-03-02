@@ -21,14 +21,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-900 text-slate-100 p-4 font-sans select-none overflow-x-hidden">
+  <div class="min-h-screen  bg-slate-900 text-slate-100 p-4 font-sans select-none overflow-x-hidden flex flex-col">
     <Bag v-if="store.hasCollected" />
-    <div class="max-w-md mx-auto space-y-6">
+    <div class="flex flex-col w-full md:max-w-md mx-auto space-y-6 grow">
       <Header />
-      <Pot v-if="!store.hasCollected" />
-      <Shop v-else />
-      <Track v-if="!store.hasCollected" />
-      <Stats v-if="store.hasCollected" />
+      <template v-if="store.hasCollected">
+        <Shop class="grow" />
+        <Stats />
+      </template>
+      <template v-else>
+        <Pot class="grow" />
+        <Track />
+      </template>
       <Footer />
     </div>
     <BlueModal v-if="store.draftOptions.length > 0" />

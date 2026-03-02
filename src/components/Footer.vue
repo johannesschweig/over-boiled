@@ -13,7 +13,7 @@ const rewards = computed(() => {
 </script>
 
 <template>
-  <footer class="p-4 bg-slate-900/50 backdrop-blur-md border-t border-slate-800">
+  <footer class="p-4 bg-slate-900/50 backdrop-blur-md border-t border-slate-800 touch-manipulation">
     <div class="flex flex-col gap-3 max-w-md mx-auto">
 
       <template v-if="!store.hasCollected && !store.isExploded">

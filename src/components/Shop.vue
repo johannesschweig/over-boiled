@@ -30,7 +30,7 @@ function buyChip(color: ChipColor, value: number) {
 </script>
 
 <template>
-  <div class="bg-slate-800 rounded-3xl py-2 px-4 border-2 border-slate-700 shadow-2xl overflow-y-auto max-h-100">
+  <div class="bg-slate-800 rounded-3xl py-2 px-4 border-2 border-slate-700 shadow-2xl overflow-y-auto">
     <div class="heading-caps mt-2 mb-2">Shop</div>
     <div class="text-xs text-slate-400 mb-4">Buy 1 or 2 different chips</div>
 

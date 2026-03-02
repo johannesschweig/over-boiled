@@ -22,11 +22,21 @@ export const chipColorStyle = (color: ChipColor) => {
   }
 }
 
+export function generateId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  } else {
+    // Fallback for non-secure localhost on mobile
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+}
+
 export function createActiveChip(blueprint: ChipBlueprint): Chip {
+
   return {
     color: blueprint.color,
     value: blueprint.value,
-    id: crypto.randomUUID(), // Native browser UUID
+    id: generateId(),
     placedAt: -1,            // Default state
     isTriggered: false       // Default state
   };

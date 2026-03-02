@@ -20,7 +20,7 @@ const slides = [
   },
   {
     "title": "Don't Overboil!",
-    "description": "Keep your white chip total at 7 or less. If you exceed 7, the pot explodes! You'll keep your victory points and rubies, but you lose your chance to shop this round. The meter in the top right will show you the current count.",
+    "description": "Keep your white chip total at 7 or less. If you exceed 7, the pot explodes! You can choose to keep the buying power or the victory points. The meter in the top right will show you the current count.",
     "image": "3-boom.png",
   },
   {
